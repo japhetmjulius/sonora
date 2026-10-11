@@ -1,0 +1,100 @@
+```svg
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1024" height="1024" viewBox="0 0 1024 1024">
+
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFF0B0"/>
+      <stop offset="35%" stop-color="#D9B45B"/>
+      <stop offset="70%" stop-color="#A97824"/>
+      <stop offset="100%" stop-color="#F5D98A"/>
+    </linearGradient>
+
+    <linearGradient id="purple" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#211332"/>
+      <stop offset="100%" stop-color="#0C0713"/>
+    </linearGradient>
+
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1024" height="1024" rx="48" fill="url(#purple)"/>
+
+  <!-- Emblem -->
+  <g transform="translate(512 365)" fill="none"
+     stroke="url(#gold)" stroke-linecap="round"
+     stroke-linejoin="round">
+
+    <!-- Flowing S -->
+    <path d="M 105 -155
+             C 25 -215 -105 -178 -120 -100
+             C -135 -25 -15 -15 52 25
+             C 135 75 112 165 35 190
+             C -25 210 -95 183 -120 145"
+          stroke-width="15" filter="url(#glow)"/>
+
+    <path d="M 105 -155
+             C 25 -215 -105 -178 -120 -100
+             C -135 -25 -15 -15 52 25
+             C 135 75 112 165 35 190
+             C -25 210 -95 183 -120 145"
+          stroke-width="5"/>
+
+    <!-- Fountain pen nib -->
+    <path d="M 0 -225
+             L 42 -163
+             L 8 -92
+             L -8 -92
+             L -42 -163 Z"
+          fill="url(#gold)" stroke-width="3"/>
+
+    <path d="M 0 -207 L 0 -115"
+          stroke="#211332" stroke-width="4"/>
+
+    <circle cx="0" cy="-145" r="6"
+            fill="#211332" stroke="none"/>
+
+    <!-- Audio waveform -->
+    <g stroke-width="7">
+      <path d="M -178 -10 V 35"/>
+      <path d="M -153 -30 V 58"/>
+      <path d="M -128 -5 V 33"/>
+      <path d="M 135 -5 V 33"/>
+      <path d="M 160 -30 V 58"/>
+      <path d="M 185 -10 V 35"/>
+    </g>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="512" y="690"
+        text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="105"
+        letter-spacing="10"
+        fill="url(#gold)">SONORA</text>
+
+  <!-- Decorative divider -->
+  <g stroke="url(#gold)" stroke-width="2" fill="none">
+    <path d="M 220 744 H 420"/>
+    <path d="M 604 744 H 804"/>
+    <path d="M 512 736 L 520 744 L 512 752 L 504 744 Z"
+          fill="url(#gold)"/>
+  </g>
+
+  <!-- Tagline -->
+  <text x="512" y="800"
+        text-anchor="middle"
+        font-family="Arial, Helvetica, sans-serif"
+        font-size="24"
+        letter-spacing="6"
+        fill="#E9D8AF">CREATE · SHARE · BE HEARD</text>
+
+</svg>
+```
