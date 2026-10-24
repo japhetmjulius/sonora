@@ -1,0 +1,327 @@
+import { useMemo, useState } from "react";
+import {
+  AudioLines, Search, Bell, Plus, Compass, Heart, Bookmark,
+  Headphones, PenTool, Palette, BookOpen, Radio,
+  ArrowUpRight, Menu, X, Sparkles, Play, Check,
+} from "lucide-react";
+import "./index.css";
+
+const categories = [
+  { name: "Everything", icon: Compass },
+  { name: "Poetry", icon: PenTool },
+  { name: "Music", icon: Headphones },
+  { name: "Visual Art", icon: Palette },
+  { name: "Writing", icon: BookOpen },
+  { name: "Podcasts", icon: Radio },
+];
+
+const creations = [
+  {
+    id: 1, type: "Poetry", title: "The Things We Never Said",
+    creator: "Amara Wanjiku", handle: "@amarawrites",
+    likes: 248, time: "4 min read", featured: true,
+    publishedAt: "2023-04-15T12:00:00Z",
+    image: "photo-1470252649378-9c29740c9fa8",
+    color: "sunset", avatar: "A",
+    description: "Some silences are louder than every word we could have spoken.",
+  },
+  {
+    id: 2, type: "Music", title: "Midnight in Nairobi",
+    creator: "Kito Sounds", handle: "@kitosounds",
+    likes: 182, time: "3:42", featured: true,
+    publishedAt: "2023-04-15T12:00:00Z",
+    image: "photo-1519608487953-e999c86e7455",
+    color: "night", avatar: "K",
+    description: "A late-night instrumental for the long way home.",
+  },
+  {
+    id: 3, type: "Visual Art", title: "Fragments of Gold",
+    creator: "Nia Okafor", handle: "@nia.creates",
+    likes: 316, time: "Digital art", featured: false,
+    publishedAt: "2023-04-15T12:00:00Z",
+    image: "photo-1541961017774-22349e4a1262",
+    color: "art", avatar: "N",
+    description: "Finding beauty in the pieces we thought we had lost.",
+  },
+  {
+    id: 4, type: "Writing", title: "A City That Remembers",
+    creator: "Eli Mwangi", handle: "@elimwangi",
+    likes: 94, time: "7 min read", featured: false,
+    publishedAt: "2023-04-15T12:00:00Z",
+    image: "photo-1519501025264-65ba15a82390",
+    color: "city", avatar: "E",
+    description: "Every street has a story. Not every story wants to be told.",
+  },
+  {
+    id: 5, type: "Music", title: "Soft Landing",
+    creator: "Maya Blue", handle: "@mayablue",
+    likes: 127, time: "4:08", featured: false,
+    publishedAt: "2023-04-15T12:00:00Z",
+    image: "photo-1516280440614-37939bbacd81",
+    color: "blue", avatar: "M",
+    description: "For the days when making it through is enough.",
+  },
+  {
+    id: 6, type: "Poetry", title: "Instructions for Beginning Again",
+    creator: "Tari Njeri", handle: "@tarinjeri",
+    likes: 203, time: "5 min read", featured: false,
+    publishedAt: "2023-04-15T12:00:00Z",
+    image: "photo-1470770841072-f978cf4d019e",
+    color: "earth", avatar: "T",
+    description: "First, forgive the version of you that was only surviving.",
+  },
+];
+
+const creators = [
+  { name: "Amara Wanjiku", handle: "@amarawrites", field: "Poet & storyteller", avatar: "A", color: "avatar-one" },
+  { name: "Kito Sounds", handle: "@kitosounds", field: "Producer & musician", avatar: "K", color: "avatar-two" },
+  { name: "Nia Okafor", handle: "@nia.creates", field: "Visual artist", avatar: "N", color: "avatar-three" },
+];
+
+function App() {
+  const [category, setCategory] = useState("Everything");
+  const [query, setQuery] = useState("");
+  const [liked, setLiked] = useState([]);
+  const [following, setFollowing] = useState([]);
+  const [mobileMenu, setMobileMenu] = useState(false);
+  const [activeTab, setActiveTab] = useState("For you");
+
+  const filtered = useMemo(() => {
+    const term = query.toLowerCase().trim();
+    return creations.filter((item) => {
+      const matchesCategory = category === "Everything" || item.type === category;
+      const matchesQuery = !term || [
+        item.title, item.creator, item.type, item.description,
+      ].some((value) => value.toLowerCase().includes(term));
+      return matchesCategory && matchesQuery;
+    });
+  }, [category, query]);
+
+  function toggleLike(id) {
+    setLiked((old) => old.includes(id) ? old.filter((n) => n !== id) : [...old, id]);
+  }
+
+  function toggleFollow(name) {
+    setFollowing((old) => old.includes(name)
+      ? old.filter((n) => n !== name)
+      : [...old, name]);
+  }
+
+  return (
+    <div className="app-shell">
+      <header className="topbar">
+        <a href="#home" className="brand">
+          <span className="brand-mark"><AudioLines size={23} /></span>
+          <span>SONORA<span className="brand-dot">.</span></span>
+        </a>
+
+        <nav className={`main-nav ${mobileMenu ? "nav-open" : ""}`}>
+          <a className="nav-link active" href="#discover" onClick={() => setMobileMenu(false)}>Discover</a>
+          <a className="nav-link" href="#creators" onClick={() => setMobileMenu(false)}>Creators</a>
+          <a className="nav-link" href="#about" onClick={() => setMobileMenu(false)}>Our story</a>
+        </nav>
+
+        <div className="top-actions">
+          <label className="search-box">
+            <Search size={17} />
+            <input
+              aria-label="Search creations"
+              placeholder="Search anything..."
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                document.getElementById("discover")?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
+            />
+            <kbd>⌘ K</kbd>
+          </label>
+          <button className="icon-button notification" aria-label="Notifications">
+            <Bell size={19} />
+            <span />
+          </button>
+          <button className="button button-gold button-small" onClick={() => alert("Creator publishing will be available in a future version.")}>
+            <Plus size={17} /> Create
+          </button>
+          <button className="mobile-toggle icon-button" aria-label="Toggle menu" onClick={() => setMobileMenu(!mobileMenu)}>
+            {mobileMenu ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
+      </header>
+
+      <main id="home">
+        <section className="hero">
+          <div className="hero-glow" />
+          <div className="hero-copy">
+            <div className="eyebrow"><Sparkles size={14} /> A HOME FOR CREATIVE EXPRESSION</div>
+            <h1>Your art.<br />Your voice.<br /><span>Your universe.</span></h1>
+            <p className="hero-description">
+              Discover the people making things that move you.
+              A place for the unheard, the curious, and the endlessly creative.
+            </p>
+            <div className="hero-actions">
+              <a className="button button-gold" href="#discover">Explore creations <ArrowUpRight size={17} /></a>
+              <a className="button button-ghost" href="#creators">Meet the creators</a>
+            </div>
+            <div className="hero-proof">
+              <div className="avatar-stack">
+                <span className="mini-avatar a1">A</span>
+                <span className="mini-avatar a2">K</span>
+                <span className="mini-avatar a3">N</span>
+                <span className="mini-avatar a4">M</span>
+              </div>
+              <p><strong>A new world of creativity.</strong><br /><span>Made for creators. Open to everyone.</span></p>
+            </div>
+          </div>
+
+          <div className="hero-art">
+            <div className="art-orbit orbit-one" />
+            <div className="art-orbit orbit-two" />
+            <div className="hero-image hero-image-back" />
+            <div className="hero-image hero-image-front">
+              <div className="hero-image-overlay" />
+              <div className="hero-art-label">
+                <span className="live-dot" /> THE ART OF BEING HUMAN
+              </div>
+              <div className="hero-art-caption">
+                <span>FEATURED CREATION</span>
+                <h3>Between the lines.</h3>
+                <p>Words by Amara Wanjiku</p>
+              </div>
+            </div>
+            <div className="floating-note note-top"><AudioLines size={17} /><span>Sound that stays.</span></div>
+            <div className="floating-note note-bottom"><span className="note-star">✳</span><span>Made with feeling.</span></div>
+          </div>
+          <div className="hero-bottom-label"><span>01 / 04</span><span className="hero-line" /><span>EXPLORE THE UNEXPECTED</span></div>
+        </section>
+
+        <section className="discovery section-wrap" id="discover">
+          <div className="section-heading">
+            <div>
+              <div className="eyebrow">THE CREATIVE UNIVERSE</div>
+              <h2>Find your <span>next feeling.</span></h2>
+              <p>Fresh perspectives, made by real people.</p>
+            </div>
+            <a className="text-link" href="#creations">Explore all <ArrowUpRight size={16} /></a>
+          </div>
+
+          <div className="category-row">
+            {categories.map(({ name, icon: Icon }) => (
+              <button
+                key={name}
+                className={`category-pill ${category === name ? "selected" : ""}`}
+                onClick={() => setCategory(name)}
+              >
+                <Icon size={16} /> {name}
+              </button>
+            ))}
+          </div>
+
+          <div className="feed-toolbar" id="creations">
+            <div className="feed-tabs">
+              {["For you", "Trending", "Latest"].map((tab) => (
+                <button key={tab} className={activeTab === tab ? "feed-tab active-tab" : "feed-tab"} onClick={() => setActiveTab(tab)}>
+                  {tab}
+                </button>
+              ))}
+            </div>
+            <span className="results-label">{filtered.length} creations</span>
+          </div>
+
+          {filtered.length > 0 ? (
+            <div className="creation-grid">
+              {filtered.map((item, index) => (
+                <article className="creation-card" key={item.id}>
+                  <div
+                    className={`creation-image ${item.color}`}
+                    style={{ backgroundImage: `url(https://images.unsplash.com/${item.image}?auto=format&fit=crop&w=900&q=85)` }}
+                  >
+                    <span className="type-tag">{item.type}</span>
+                    {item.type === "Music" && <button className="play-button" aria-label={`Play ${item.title}`} onClick={() => alert("Audio playback will be added when media hosting is connected.")}><Play size={19} fill="currentColor" /></button>}
+                    <button
+                      className={`like-button ${liked.includes(item.id) ? "is-liked" : ""}`}
+                      aria-label={liked.includes(item.id) ? "Unlike creation" : "Like creation"}
+                      onClick={() => toggleLike(item.id)}
+                    >
+                      <Heart size={17} fill={liked.includes(item.id) ? "currentColor" : "none"} />
+                    </button>
+                    {item.featured && <span className="featured-tag"><Sparkles size={12} /> FEATURED</span>}
+                  </div>
+                  <div className="creation-body">
+                    <h3>{item.title}</h3>
+                    <p className="creation-description">{item.description}</p>
+                    <div className="creation-footer">
+                      <div className="creator-mini">
+                        <span className={`creator-avatar ${item.color}`}>{item.avatar}</span>
+                        <div><strong>{item.creator}</strong><span>{item.handle}</span></div>
+                      </div>
+                      <div className="creation-stats"><Heart size={14} /> {item.likes + (liked.includes(item.id) ? 1 : 0)} <span>·</span> {item.time}</div>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className="empty-state">
+              <Search size={28} />
+              <h3>No creations found</h3>
+              <p>Try a different search or category.</p>
+              <button className="button button-ghost" onClick={() => { setQuery(""); setCategory("Everything"); }}>Clear filters</button>
+            </div>
+          )}
+        </section>
+
+        <section className="creator-section" id="creators">
+          <div className="section-wrap">
+            <div className="section-heading">
+              <div>
+                <div className="eyebrow">PEOPLE BEHIND THE MAGIC</div>
+                <h2>Meet the <span>makers.</span></h2>
+                <p>Every great creation starts with a human.</p>
+              </div>
+              <a className="text-link" href="#creators">Discover creators <ArrowUpRight size={16} /></a>
+            </div>
+
+            <div className="creator-grid">
+              {creators.map((creator) => {
+                const isFollowing = following.includes(creator.name);
+                return (
+                  <article className="creator-card" key={creator.name}>
+                    <div className={`creator-cover ${creator.color}`}><Sparkles size={19} /></div>
+                    <div className={`creator-profile-avatar ${creator.color}`}>{creator.avatar}</div>
+                    <div className="creator-info">
+                      <h3>{creator.name}</h3>
+                      <p>{creator.handle}</p>
+                      <span>{creator.field}</span>
+                    </div>
+                    <button className={`follow-button ${isFollowing ? "following" : ""}`} onClick={() => toggleFollow(creator.name)}>
+                      {isFollowing ? <><Check size={15} /> Following</> : <><Plus size={15} /> Follow</>}
+                    </button>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        <section className="join-section" id="about">
+          <div className="join-glow" />
+          <div className="join-content">
+            <div className="eyebrow"><Sparkles size={14} /> YOUR PEOPLE ARE HERE</div>
+            <h2>There is room<br />for <span>your voice.</span></h2>
+            <p>Start sharing what you make. Find people who feel what you feel. Be part of something still becoming.</p>
+            <button className="button button-gold" onClick={() => alert("Creator registration will be available in a future version.")}>Find your place <ArrowUpRight size={17} /></button>
+          </div>
+          <div className="join-decoration"><AudioLines size={100} strokeWidth={0.8} /></div>
+        </section>
+      </main>
+
+      <footer className="footer">
+        <a href="#home" className="brand"><span className="brand-mark"><AudioLines size={20} /></span><span>SONORA<span className="brand-dot">.</span></span></a>
+        <p>A home for creative expression.</p>
+        <span className="footer-copy">© 2026 SONORA · BUILT FOR THE FEELING</span>
+      </footer>
+    </div>
+  );
+}
+
+export default App;
